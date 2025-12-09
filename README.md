@@ -1,0 +1,2 @@
+# TrueSeats
+Event booking platform
