@@ -1,0 +1,22 @@
+{
+  "name": "TrueSeats",
+  "version": "1.0.0",
+  "description": "Event booking platform",
+  "main": "index.js",
+  "repository": "https://github.com/Shuraifp/TrueSeats",
+  "author": "shuraif",
+  "license": "no",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "frontend:dev": "yarn workspace frontend dev",
+    "backend:dev": "yarn workspace backend dev",
+    "dev": "concurrently \"yarn frontend:dev\" \"yarn backend:dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  },
+  "packageManager": "yarn@4.12.0"
+}
