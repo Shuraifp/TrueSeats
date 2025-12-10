@@ -8,10 +8,10 @@ import { ITokenService } from './domain/services/ITokenService';
 import { JwtService } from './infrastructure/services/JwtService';
 import { RegisterUserUseCase } from './application/useCases/RegisterUserUseCase';
 
+import { SigninUserUseCase } from './application/useCases/SigninUserUseCase';
 import { RefreshTokenUseCase } from './application/useCases/refreshTokenUseCase';
 import { AuthController } from './presentation/controllers/AuthController';
 import { EventController } from './presentation/controllers/EventController';
-import { LoginUserUseCase } from './application/useCases/LoginUserUseCase';
 
 // Event Module Imports
 import { IEventRepository } from './domain/repositories/IEventRepository';
@@ -38,7 +38,7 @@ container.bind<ITokenService>(TYPES.ITokenService).to(JwtService).inSingletonSco
 
 // Use Cases
 container.bind<RegisterUserUseCase>(TYPES.RegisterUserUseCase).to(RegisterUserUseCase).inSingletonScope();
-container.bind<LoginUserUseCase>(TYPES.LoginUserUseCase).to(LoginUserUseCase).inSingletonScope();
+container.bind<SigninUserUseCase>(TYPES.LoginUserUseCase).to(SigninUserUseCase).inSingletonScope();
 container.bind<RefreshTokenUseCase>(TYPES.RefreshTokenUseCase).to(RefreshTokenUseCase).inSingletonScope();
 container.bind<CreateEventUseCase>(TYPES.CreateEventUseCase).to(CreateEventUseCase).inSingletonScope();
 container.bind<UpdateEventUseCase>(TYPES.UpdateEventUseCase).to(UpdateEventUseCase).inSingletonScope();
