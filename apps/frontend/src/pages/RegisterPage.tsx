@@ -1,14 +1,15 @@
 import React, { useCallback } from 'react';
-import { Formik, Form, Field } from 'formik';
+import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import InputField from '../components/InputField';
 import Button from '../components/Button';
-import { useNavigate } from 'react-router-dom';
-import type { UserRole } from '../types';
-
-interface RegisterPageProps {
-  onRegisterSuccess: (role: UserRole) => void;
-}
+import CheckboxField from '../components/CheckboxField';
+import { useNavigate, Link } from 'react-router-dom';
+import { AppRoutes } from '../routes';
+import { useAuth } from '../context/AuthContext';
+import { Role } from '../constants';
+import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
 
 const RegisterSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
@@ -17,37 +18,46 @@ const RegisterSchema = Yup.object().shape({
   confirmPassword: Yup.string()
     .oneOf([Yup.ref('password')], 'Passwords must match')
     .required('Confirm Password is required'),
-  role: Yup.string().oneOf(['user', 'admin' as const]).required('Role is required'),
+  isOrganizer: Yup.boolean(),
 });
 
-const RegisterPage: React.FC<RegisterPageProps> = ({ onRegisterSuccess }) => {
+const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
+  
   const handleSubmit = useCallback(async (values: any) => {
-    // Here you would typically send the registration data to your backend API
-    console.log('Registration attempt with:', values);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    alert(`User "${values.name}" registered successfully as ${values.role}! (Simulation)`);
-    onRegisterSuccess(values.role); // Call the success handler with the registered role
-    navigate('/login'); // Redirect to login page after registration
-  }, [onRegisterSuccess, navigate]);
+    const role = values.isOrganizer ? Role.Admin : Role.User;
+
+    try {
+      await register({ ...values, role });
+      toast.success('registeration successful')
+      navigate(AppRoutes.SIGNIN);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message || 'Registration failed. Please try again.');
+      } else {
+        toast.error('An unexpected error occurred.');
+      }
+    }
+  }, [register, navigate]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-gray-50 p-4">
+      <div className="w-full max-w-md p-8 text-center">
+        <h2 className="text-4xl font-extrabold text-white mb-8 tracking-tight">Create Your Account</h2>
         <Formik
           initialValues={{
             name: '',
             email: '',
             password: '',
             confirmPassword: '',
-            role: 'user', // Default role
+            isOrganizer: false,
           }}
           validationSchema={RegisterSchema}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
-            <Form>
+            <Form className="space-y-6">
               <InputField
                 label="Name"
                 name="name"
@@ -72,22 +82,19 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ onRegisterSuccess }) => {
                 type="password"
                 placeholder="Confirm your password"
               />
-              <div className="mb-4">
-                <label htmlFor="role" className="block text-gray-700 text-sm font-bold mb-2">
-                  Role
-                </label>
-                <Field
-                  as="select"
-                  name="role"
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                >
-                  <option value="user">User</option>
-                  <option value="admin">Admin</option>
-                </Field>
-              </div>
-              <Button type="submit" disabled={isSubmitting} className="w-full mt-4">
+              <CheckboxField
+                name="isOrganizer"
+                label="I am an organizer"
+              />
+              <Button type="submit" disabled={isSubmitting} variant="primary_golden" className="w-full mt-6">
                 Register
               </Button>
+              <p className="text-gray-400 text-sm mt-4">
+                Already have an account? {' '}
+                <Link to={AppRoutes.SIGNIN} className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+                  Login here
+                </Link>
+              </p>
             </Form>
           )}
         </Formik>
