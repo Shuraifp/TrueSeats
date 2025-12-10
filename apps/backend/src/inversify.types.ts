@@ -7,4 +7,15 @@ export const TYPES = {
     RefreshTokenUseCase: Symbol.for("RefreshTokenUseCase"),
     AuthController: Symbol.for("AuthController"),
     EventController: Symbol.for("EventController"),
+
+    // Event Module
+    IEventRepository: Symbol.for("IEventRepository"),
+    IBookingRepository: Symbol.for("IBookingRepository"),
+    CreateEventUseCase: Symbol.for("CreateEventUseCase"),
+    UpdateEventUseCase: Symbol.for("UpdateEventUseCase"),
+    GetEventByIdUseCase: Symbol.for("GetEventByIdUseCase"),
+    GetAllEventsUseCase: Symbol.for("GetAllEventsUseCase"),
+    BookTicketUseCase: Symbol.for("BookTicketUseCase"),
+    GetUserBookingHistoryUseCase: Symbol.for("GetUserBookingHistoryUseCase"),
+    GetAllBookingsUseCase: Symbol.for("GetAllBookingsUseCase"),
   };

@@ -4,13 +4,15 @@ import * as Yup from 'yup';
 import InputField from '../components/InputField';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
-import { AppRoutes } from '../routes'; // Import AppRoutes
+import { AppRoutes } from '../routes';
 import toast from 'react-hot-toast';
+import { api } from '../api/axios'; 
+import { API_ROUTES } from '../constants/apiRoutes';
 
 const CreateEventSchema = Yup.object().shape({
   title: Yup.string().required('Title is required'),
   description: Yup.string().required('Description is required'),
-  date: Yup.string().required('Date is required'), // Consider a date picker for production
+  date: Yup.string().required('Date is required'),
   availableSeats: Yup.number()
     .min(1, 'Must have at least 1 seat')
     .required('Available seats is required'),
@@ -20,11 +22,13 @@ const CreateEventPage: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSubmit = useCallback(async (values: any) => {
-    // Simulate API call to create an event
-    console.log('Creating event with:', values);
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    toast.success(`Event "${values.title}" created successfully! (Simulation)`);
-    navigate(AppRoutes.ADMIN_DASHBOARD); // Redirect to admin dashboard after creation
+    try {
+      await api.post(API_ROUTES.EVENTS.CREATE, values);
+      toast.success(`Event "${values.title}" created successfully!`);
+      navigate(AppRoutes.ADMIN_DASHBOARD);
+    } catch (err: any) {
+      toast.error('Failed to create event: ' + (err.response?.data?.message || err.message));
+    }
   }, [navigate]);
 
   return (
