@@ -2,6 +2,8 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import type { Event } from '../types';
+import eventBGImg from '/assets/Event Management.jpg';
+import { AppRoutes } from '../routes';
 
 const dummyEvents: Event[] = [
   {
@@ -64,27 +66,39 @@ const EventDetailPage: React.FC = () => {
       console.log(`Booking ticket for event: ${event.title}`);
       await new Promise(resolve => setTimeout(resolve, 1000));
       alert(`Ticket booked for ${event.title}! (Simulation)`);
-      navigate('/booking-history'); // Redirect to booking history after booking
+      navigate(AppRoutes.BOOKING_HISTORY); // Redirect to booking history after booking
     }
   }, [event, navigate]);
 
-  if (loading) return <div className="flex justify-center items-center min-h-screen text-xl">Loading event details...</div>;
-  if (error) return <div className="flex justify-center items-center min-h-screen text-red-500">Error: {error}</div>;
-  if (!event) return <div className="flex justify-center items-center min-h-screen text-xl">No event data available.</div>;
+  if (loading) return <div className="flex justify-center items-center min-h-screen text-white text-xl bg-gray-900">Loading event details...</div>;
+  if (error) return <div className="flex justify-center items-center min-h-screen text-red-500 bg-gray-900">Error: {error}</div>;
+  if (!event) return <div className="flex justify-center items-center min-h-screen text-white text-xl bg-gray-900">No event data available.</div>;
 
   return (
-    <div className="container mx-auto p-4">
-      <div className="bg-white rounded-lg shadow-md overflow-hidden p-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-4">{event.title}</h1>
-        <p className="text-gray-700 mb-4">{event.description}</p>
-        <p className="text-gray-600 text-sm mb-2">Date: {event.date}</p>
-        <p className="text-gray-600 text-sm mb-4">Available Seats: {event.availableSeats}</p>
-        <Button onClick={handleBookTicket} disabled={event.availableSeats <= 0} className="mt-4">
-          {event.availableSeats > 0 ? 'Book Ticket' : 'Sold Out'}
-        </Button>
-        <Button onClick={() => navigate('/events')} variant="secondary" className="ml-4 mt-4">
-          Back to Events
-        </Button>
+    <div className="min-h-screen bg-gray-900 text-gray-100 flex flex-col md:flex-row">
+      {/* Background Image Section */}
+      <div
+        className="w-full md:w-1/2 bg-cover bg-center h-64 md:h-auto"
+        style={{
+          backgroundImage: `url(${eventBGImg})`,
+          minHeight: '300px',
+        }}
+      ></div>
+
+      {/* Event Details Section */}
+      <div className="w-full md:w-1/2 p-4 flex items-center justify-center">
+        <div className="p-8 max-w-2xl w-full mx-auto md:mx-0">
+          <h1 className="text-4xl font-extrabold text-white mb-4 tracking-tight leading-tight">{event.title}</h1>
+          <p className="text-lg text-gray-300 mb-6">{event.description}</p>
+          <p className="text-md text-gray-400 mb-2">Date: <span className="font-semibold text-cyan-300">{event.date}</span></p>
+          <p className="text-md text-gray-400 mb-6">Available Seats: <span className="font-semibold text-yellow-400">{event.availableSeats}</span></p>
+          <Button onClick={handleBookTicket} disabled={event.availableSeats <= 0} variant="primary_golden" className="mt-8 w-full">
+            {event.availableSeats > 0 ? 'Book Ticket' : 'Sold Out'}
+          </Button>
+          <Button onClick={() => navigate(AppRoutes.EVENTS)} variant="secondary" className="ml-0 md:ml-4 mt-2 md:mt-8 w-full md:w-auto">
+            Back to Events
+          </Button>
+        </div>
       </div>
     </div>
   );

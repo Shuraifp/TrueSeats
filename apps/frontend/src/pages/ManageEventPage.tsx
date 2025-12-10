@@ -2,9 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import type { Event } from '../types';
+import { AppRoutes } from '../routes'; // Import AppRoutes
 
 // Reusing dummy events for consistency
-const dummyEvents: Event[] = [
+export const dummyEvents: Event[] = [
   {
     id: 1,
     title: 'Concert in the Park',
@@ -62,31 +63,33 @@ const ManageEventPage: React.FC = () => {
     }
   }, []);
 
-  if (loading) return <div className="flex justify-center items-center min-h-screen text-xl">Loading events...</div>;
-  if (error) return <div className="flex justify-center items-center min-h-screen text-red-500">Error: {error}</div>;
-  if (events.length === 0) return <div className="flex justify-center items-center min-h-screen text-xl">No events to manage.</div>;
+  if (loading) return <div className="flex justify-center items-center min-h-screen text-white text-xl bg-gray-900">Loading events...</div>;
+  if (error) return <div className="flex justify-center items-center min-h-screen text-red-500 bg-gray-900">Error: {error}</div>;
+  if (events.length === 0) return <div className="flex justify-center items-center min-h-screen text-white text-xl bg-gray-900">No events to manage.</div>;
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">Manage Events</h1>
-      <div className="grid grid-cols-1 gap-6">
-        {events.map((event) => (
-          <div key={event.id} className="bg-white rounded-lg shadow-md overflow-hidden p-6 flex justify-between items-center">
-            <div>
-              <h2 className="text-xl font-semibold mb-2">{event.title}</h2>
-              <p className="text-gray-600 text-sm">Date: {event.date}</p>
-              <p className="text-gray-600 text-sm">Available Seats: {event.availableSeats}</p>
+    <div className="min-h-screen bg-gray-900 text-gray-100 p-4">
+      <div className="container mx-auto">
+        <h1 className="text-3xl font-bold text-white mb-6 text-center">Manage Events</h1>
+        <div className="grid grid-cols-1 gap-6">
+          {events.map((event) => (
+            <div key={event.id} className="bg-gray-800 border border-gray-700 rounded-lg shadow-md overflow-hidden p-6 flex justify-between items-center">
+              <div>
+                <h2 className="text-xl font-semibold text-white mb-2">{event.title}</h2>
+                <p className="text-gray-300 text-sm">Date: <span className="font-medium text-cyan-300">{event.date}</span></p>
+                <p className="text-gray-300 text-sm">Available Seats: <span className="font-medium text-yellow-400">{event.availableSeats}</span></p>
+              </div>
+              <div className="flex space-x-2">
+                <Link to={AppRoutes.ADMIN_EDIT_EVENT(event.id)}>
+                  <Button variant="secondary">Edit</Button>
+                </Link>
+                <Button variant="danger" onClick={() => handleDeleteEvent(event.id)}>
+                  Delete
+                </Button>
+              </div>
             </div>
-            <div className="flex space-x-2">
-              <Link to={`/admin/events/edit/${event.id}`}>
-                <Button variant="secondary">Edit</Button>
-              </Link>
-              <Button variant="danger" onClick={() => handleDeleteEvent(event.id)}>
-                Delete
-              </Button>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   );

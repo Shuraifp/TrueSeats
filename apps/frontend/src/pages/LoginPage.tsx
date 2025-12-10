@@ -3,8 +3,9 @@ import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import InputField from '../components/InputField';
 import Button from '../components/Button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import type { UserRole } from '../types';
+import { Role } from '../constants'; // Import Role constant
 
 interface LoginPageProps {
   onLogin: (role: UserRole) => void;
@@ -21,17 +22,17 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
     // Here you would typically send the login data to your backend API
     console.log('Login attempt with:', values);
     // Simulate a successful login and determine role
-    const dummyRole: UserRole = values.email === 'admin@example.com' ? 'admin' : 'user';
+    const dummyRole: UserRole = Role.Admin
     await new Promise(resolve => setTimeout(resolve, 1000));
     onLogin(dummyRole);
     alert(`Logged in as ${dummyRole}!`);
-    navigate('/events'); // Redirect to events page after login
+    navigate('/events');
   }, [onLogin, navigate]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+    <div className="flex items-center justify-center min-h-screen bg-gray-900 text-gray-100 p-4">
+      <div className="w-full max-w-md p-8 text-center">
+        <h2 className="text-4xl font-extrabold text-white mb-8 tracking-tight">Welcome Back!</h2>
         <Formik
           initialValues={{
             email: '',
@@ -41,7 +42,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
-            <Form>
+            <Form className="space-y-6">
               <InputField
                 label="Email"
                 name="email"
@@ -54,9 +55,15 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
                 type="password"
                 placeholder="Enter your password"
               />
-              <Button type="submit" disabled={isSubmitting} className="w-full mt-4">
+              <Button type="submit" disabled={isSubmitting} variant="primary_golden" className="w-full mt-6">
                 Login
               </Button>
+              <p className="text-gray-400 text-sm mt-4">
+                Don't have an account? {' '}
+                <Link to="/register" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+                  Register here
+                </Link>
+              </p>
             </Form>
           )}
         </Formik>
