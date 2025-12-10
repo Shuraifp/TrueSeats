@@ -7,6 +7,7 @@ import Button from '../components/Button';
 import type { Event } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { AppRoutes } from '../routes'; // Import AppRoutes
+import toast from 'react-hot-toast';
 
 const dummyEvents: Event[] = [
   {
@@ -59,10 +60,11 @@ const EditEventPage: React.FC = () => {
         setEvent(foundEvent);
       } else {
         setError('Event not found.');
+        toast.error('Event not found.');
       }
     } catch (err) {
       setError('Failed to fetch event details.');
-      console.error(err);
+      toast.error('Failed to fetch event details.');
     } finally {
       setLoading(false);
     }
@@ -77,7 +79,7 @@ const EditEventPage: React.FC = () => {
       // Simulate API call to update event
       console.log(`Updating event ${event.id} with:`, values);
       await new Promise(resolve => setTimeout(resolve, 1000));
-      alert(`Event "${values.title}" updated successfully! (Simulation)`);
+      toast.success(`Event "${values.title}" updated successfully! (Simulation)`);
       navigate(AppRoutes.ADMIN_MANAGE_EVENTS); // Redirect to manage events after update
     }
   }, [event, navigate]);

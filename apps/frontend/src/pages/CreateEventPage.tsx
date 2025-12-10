@@ -5,6 +5,7 @@ import InputField from '../components/InputField';
 import Button from '../components/Button';
 import { useNavigate } from 'react-router-dom';
 import { AppRoutes } from '../routes'; // Import AppRoutes
+import toast from 'react-hot-toast';
 
 const CreateEventSchema = Yup.object().shape({
   title: Yup.string().required('Title is required'),
@@ -22,7 +23,7 @@ const CreateEventPage: React.FC = () => {
     // Simulate API call to create an event
     console.log('Creating event with:', values);
     await new Promise(resolve => setTimeout(resolve, 1000));
-    alert(`Event "${values.title}" created successfully! (Simulation)`);
+    toast.success(`Event "${values.title}" created successfully! (Simulation)`);
     navigate(AppRoutes.ADMIN_DASHBOARD); // Redirect to admin dashboard after creation
   }, [navigate]);
 

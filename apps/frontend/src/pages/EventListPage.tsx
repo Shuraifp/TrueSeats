@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import EventCard from '../components/EventCard';
 import type { Event } from '../types';
+import toast from 'react-hot-toast';
 
 export const dummyEvents: Event[] = [
   {
@@ -40,7 +41,7 @@ const EventListPage: React.FC = () => {
       setEvents(dummyEvents);
     } catch (err) {
       setError('Failed to fetch events.');
-      console.error(err);
+      toast.error('Failed to fetch events.');
     } finally {
       setLoading(false);
     }

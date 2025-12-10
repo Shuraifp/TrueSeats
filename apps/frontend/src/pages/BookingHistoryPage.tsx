@@ -4,6 +4,7 @@ import type { Booking } from '../types';
 import Button from '../components/Button';
 import LoadingSpinner from '../components/LoadingSpinner';
 import { AppRoutes } from '../routes'; // Import AppRoutes
+import toast from 'react-hot-toast';
 
 const dummyBookings: Booking[] = [
   {
@@ -36,7 +37,7 @@ const BookingHistoryPage: React.FC = () => {
       setBookings(dummyBookings);
     } catch (err) {
       setError('Failed to fetch booking history.');
-      console.error(err);
+      toast.error('Failed to fetch booking history.');
     } finally {
       setLoading(false);
     }

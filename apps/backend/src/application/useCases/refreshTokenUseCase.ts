@@ -1,35 +1,38 @@
-import dotenv from "dotenv"
-import { injectable, inject } from "inversify";
-import jwt from "jsonwebtoken";
-import { IUserRepository } from "../../domain/repositories/IUserRepository";
-import { UnauthorizedError } from "../../shared/errors";
-import { JWT_CONFIG } from "../../shared/constants/JWTConfig";
-import { TYPES } from "../../../inversify.types";
-dotenv.config()
+import { injectable, inject } from 'inversify';
+import { ITokenService } from '../../domain/services/ITokenService';
+import { TYPES } from '../../inversify.types';
+import { UnauthorizedError } from '../../shared/errors';
+import { RefreshTokenResponseDTO } from '../dtos/AuthDTOs';
+import { IUserRepository } from '../../domain/repositories/IUserRepository';
 
 @injectable()
 export class RefreshTokenUseCase {
-  constructor(@inject(TYPES.IUserRepository) private userRepo: IUserRepository) {}
+  constructor(
+    @inject(TYPES.ITokenService) private readonly _tokenService: ITokenService,
+    @inject(TYPES.IUserRepository) private readonly _userRepository: IUserRepository
+  ) {}
 
-  async execute(refreshToken: string): Promise<{ accessToken: string }> {
-    let decoded;
-    try {
-      decoded = jwt.verify(refreshToken, JWT_CONFIG.REFRESH_SECRET) as { id: number };
-    } catch (err) {
-      throw new UnauthorizedError("Invalid refresh token");
+  public async execute(refreshToken: string): Promise<RefreshTokenResponseDTO> {
+    const decoded = this._tokenService.verifyRefreshToken(refreshToken);
+
+    if (!decoded || !decoded.userId) {
+      throw new UnauthorizedError('Invalid refresh token.');
     }
 
-    const user = await this.userRepo.findById(decoded.id);
+    const user = await this._userRepository.findById(decoded.userId);
     if (!user) {
-      throw new UnauthorizedError("User not found");
+      throw new UnauthorizedError('User not found.');
     }
 
-    const accessToken = jwt.sign(
-      { id: user.id, role: user.role },
-      JWT_CONFIG.ACCESS_SECRET,
-      { expiresIn: JWT_CONFIG.ACCESS_EXPIRY }
-    );
+    const newAccessToken = this._tokenService.generateAccessToken(user.id!, user.role);
 
-    return { accessToken };
+    return {
+      accessToken: newAccessToken,
+      user: {
+        id: user.id!,
+        email: user.email,
+        role: user.role,
+      },
+    };
   }
 }

@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import Button from './Button';
 import type { UserRole } from '../types';
 import { Role } from '../constants';
-import { AppRoutes } from '../routes'; // Import AppRoutes
+import { AppRoutes } from '../routes';
 
 interface HeaderProps {
     isAuthenticated: boolean;
@@ -26,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, userRole, onLogout }) 
                 <div className="space-x-4">
                     {!isAuthenticated ? (
                         <>
-                            <Link to={AppRoutes.LOGIN}>
+                            <Link to={AppRoutes.SIGNIN}>
                                 <Button variant="secondary">Login</Button>
                             </Link>
                             <Link to={AppRoutes.REGISTER}>

@@ -5,12 +5,11 @@ import InputField from '../components/InputField';
 import Button from '../components/Button';
 import CheckboxField from '../components/CheckboxField';
 import { useNavigate, Link } from 'react-router-dom';
-import type { UserRole } from '../types';
+import { AppRoutes } from '../routes';
+import { useAuth } from '../context/AuthContext';
 import { Role } from '../constants';
-
-interface RegisterPageProps {
-  onRegisterSuccess: (role: UserRole) => void;
-}
+import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
 
 const RegisterSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
@@ -22,18 +21,25 @@ const RegisterSchema = Yup.object().shape({
   isOrganizer: Yup.boolean(),
 });
 
-const RegisterPage: React.FC<RegisterPageProps> = ({ onRegisterSuccess }) => {
+const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
+  const { register } = useAuth();
+  
   const handleSubmit = useCallback(async (values: any) => {
-    const role: UserRole = values.isOrganizer ? Role.Admin : Role.User;
+    const role = values.isOrganizer ? Role.Admin : Role.User;
 
-    // Here you would typically send the registration data to your backend API
-    console.log('Registration attempt with:', { ...values, role });
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    alert(`User "${values.name}" registered successfully as ${role}! (Simulation)`);
-    onRegisterSuccess(role);
-    navigate('/login');
-  }, [onRegisterSuccess, navigate]);
+    try {
+      await register({ ...values, role });
+      toast.success('registeration successful')
+      navigate(AppRoutes.SIGNIN);
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message || 'Registration failed. Please try again.');
+      } else {
+        toast.error('An unexpected error occurred.');
+      }
+    }
+  }, [register, navigate]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-gray-50 p-4">
@@ -85,7 +91,7 @@ const RegisterPage: React.FC<RegisterPageProps> = ({ onRegisterSuccess }) => {
               </Button>
               <p className="text-gray-400 text-sm mt-4">
                 Already have an account? {' '}
-                <Link to="/login" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+                <Link to={AppRoutes.SIGNIN} className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
                   Login here
                 </Link>
               </p>

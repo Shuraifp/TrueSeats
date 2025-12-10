@@ -15,3 +15,15 @@ export interface Booking {
   ticketsBooked: number;
   bookingDate: string;
 }
+
+export interface RegisterRequestDTO {
+  name: string;
+  email: string;
+  password: string;
+  role: UserRole;
+}
+
+export interface LoginRequestDTO {
+  email: string;
+  password: string;
+}

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import type { Event } from '../types';
 import { AppRoutes } from '../routes'; // Import AppRoutes
+import toast from 'react-hot-toast';
 
 // Reusing dummy events for consistency
 export const dummyEvents: Event[] = [
@@ -43,7 +44,7 @@ const ManageEventPage: React.FC = () => {
       setEvents(dummyEvents);
     } catch (err) {
       setError('Failed to fetch events.');
-      console.error(err);
+      toast.error('Failed to fetch events.');
     } finally {
       setLoading(false);
     }
@@ -59,7 +60,7 @@ const ManageEventPage: React.FC = () => {
       // Simulate API call for deletion
       await new Promise(resolve => setTimeout(resolve, 500));
       setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
-      alert('Event deleted successfully! (Simulation)');
+      toast.success('Event deleted successfully! (Simulation)');
     }
   }, []);
 

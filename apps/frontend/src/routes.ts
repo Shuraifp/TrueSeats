@@ -1,6 +1,6 @@
 export const AppRoutes = {
   HOME: '/',
-  LOGIN: '/login',
+  SIGNIN: '/signin',
   REGISTER: '/register',
   EVENTS: '/events',
   EVENT_DETAIL: (id: string | number) => `/events/${id}`,

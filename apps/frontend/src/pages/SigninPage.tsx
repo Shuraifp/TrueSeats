@@ -4,30 +4,33 @@ import * as Yup from 'yup';
 import InputField from '../components/InputField';
 import Button from '../components/Button';
 import { useNavigate, Link } from 'react-router-dom';
-import type { UserRole } from '../types';
-import { Role } from '../constants'; // Import Role constant
+import { AppRoutes } from '../routes';
+import { useAuth } from '../context/AuthContext';
+import { AxiosError } from 'axios';
+import toast from 'react-hot-toast';
 
-interface LoginPageProps {
-  onLogin: (role: UserRole) => void;
-}
-
-const LoginSchema = Yup.object().shape({
+const SigninSchema = Yup.object().shape({
   email: Yup.string().email('Invalid email').required('Email is required'),
   password: Yup.string().required('Password is required'),
 });
 
-const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
+const SigninPage: React.FC = () => {
   const navigate = useNavigate();
+  const { login } = useAuth();
+  
   const handleSubmit = useCallback(async (values: any) => {
-    // Here you would typically send the login data to your backend API
-    console.log('Login attempt with:', values);
-    // Simulate a successful login and determine role
-    const dummyRole: UserRole = Role.Admin
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    onLogin(dummyRole);
-    alert(`Logged in as ${dummyRole}!`);
-    navigate('/events');
-  }, [onLogin, navigate]);
+    try {
+      await login(values);
+      toast.success('login successful')
+      navigate(AppRoutes.HOME)
+    } catch (error) {
+      if (error instanceof AxiosError) {
+        toast.error(error.response?.data?.message || 'Login failed. Please check your credentials.');
+      } else {
+        toast.error('An unexpected error occurred.');
+      }
+    }
+  }, [navigate, login]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-900 text-gray-100 p-4">
@@ -38,7 +41,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
             email: '',
             password: '',
           }}
-          validationSchema={LoginSchema}
+          validationSchema={SigninSchema}
           onSubmit={handleSubmit}
         >
           {({ isSubmitting }) => (
@@ -60,7 +63,7 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
               </Button>
               <p className="text-gray-400 text-sm mt-4">
                 Don't have an account? {' '}
-                <Link to="/register" className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
+                <Link to={AppRoutes.REGISTER} className="text-blue-400 hover:text-blue-300 font-medium transition-colors">
                   Register here
                 </Link>
               </p>
@@ -72,4 +75,4 @@ const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
   );
 };
 
-export default LoginPage;
+export default SigninPage;

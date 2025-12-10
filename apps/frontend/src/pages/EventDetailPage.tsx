@@ -4,6 +4,7 @@ import Button from '../components/Button';
 import type { Event } from '../types';
 import eventBGImg from '/assets/Event Management.jpg';
 import { AppRoutes } from '../routes';
+import toast from 'react-hot-toast';
 
 const dummyEvents: Event[] = [
   {
@@ -47,10 +48,11 @@ const EventDetailPage: React.FC = () => {
         setEvent(foundEvent);
       } else {
         setError('Event not found.');
+        toast.error('Event not found.');
       }
     } catch (err) {
       setError('Failed to fetch event details.');
-      console.error(err);
+      toast.error('Failed to fetch event details.');
     } finally {
       setLoading(false);
     }
@@ -65,7 +67,7 @@ const EventDetailPage: React.FC = () => {
       // Simulate booking API call
       console.log(`Booking ticket for event: ${event.title}`);
       await new Promise(resolve => setTimeout(resolve, 1000));
-      alert(`Ticket booked for ${event.title}! (Simulation)`);
+      toast.success(`Ticket booked for ${event.title}! (Simulation)`);
       navigate(AppRoutes.BOOKING_HISTORY); // Redirect to booking history after booking
     }
   }, [event, navigate]);

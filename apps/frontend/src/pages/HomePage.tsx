@@ -11,9 +11,7 @@ const HomePage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gray-900 text-gray-100 p-4">
       <div className="container mx-auto text-center py-12">
-        {/* Visual Enhancement Section */}
         <div className="flex flex-col items-center justify-center mb-10">
-          {/* Placeholder for SVG/PNG image */}
           <div className="w-32 h-32 mb-4 bg-linear-to-r from-blue-500 to-cyan-400 rounded-full flex items-center justify-center text-white text-5xl font-extrabold shadow-lg">
             🎉
           </div>
