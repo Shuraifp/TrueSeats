@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { inject, injectable } from 'inversify';
 import { StatusCodes } from 'http-status-codes';
-import { LoginUserUseCase } from '../../application/useCases/LoginUserUseCase';
+import { SigninUserUseCase } from '../../application/useCases/SigninUserUseCase';
 import { RegisterUserUseCase } from '../../application/useCases/RegisterUserUseCase';
 import { RefreshTokenUseCase } from '../../application/useCases/refreshTokenUseCase';
 import { TYPES } from '../../inversify.types';
@@ -12,7 +12,7 @@ import { UnauthorizedError } from '../../shared/errors/UnauthorizedError';
 export class AuthController {
   constructor(
     @inject(TYPES.RegisterUserUseCase) private registerUserUseCase: RegisterUserUseCase,
-    @inject(TYPES.LoginUserUseCase) private loginUserUseCase: LoginUserUseCase,
+    @inject(TYPES.LoginUserUseCase) private loginUserUseCase: SigninUserUseCase,
     @inject(TYPES.RefreshTokenUseCase) private refreshTokenUseCase: RefreshTokenUseCase
   ) { }
 

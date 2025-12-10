@@ -7,7 +7,7 @@ import { TYPES } from '../../inversify.types';
 import { UnauthorizedError } from '../../shared/errors/UnauthorizedError';
 
 @injectable()
-export class LoginUserUseCase {
+export class SigninUserUseCase {
   constructor(
     @inject(TYPES.IUserRepository) private userRepository: IUserRepository,
     @inject(TYPES.IPasswordService) private passwordService: IPasswordService,
