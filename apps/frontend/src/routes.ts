@@ -9,5 +9,6 @@ export const AppRoutes = {
   ADMIN_CREATE_EVENT: '/admin/events/create',
   ADMIN_MANAGE_EVENTS: '/admin/events/manage',
   ADMIN_EDIT_EVENT: (id: string | number) => `/admin/events/edit/${id}`,
+  ADMIN_ALL_BOOKINGS: '/admin/bookings',
   NOT_FOUND: '*',
 };

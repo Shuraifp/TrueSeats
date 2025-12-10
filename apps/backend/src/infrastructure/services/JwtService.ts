@@ -1,4 +1,4 @@
-import jwt, { Secret, SignOptions } from 'jsonwebtoken';
+import jwt, { Secret } from 'jsonwebtoken';
 import { injectable } from 'inversify';
 import { JWT_CONFIG } from '../../shared/constants/JWTConfig';
 import { ITokenService } from '../../domain/services/ITokenService';
@@ -7,12 +7,11 @@ import { Role } from '../../domain/entities/User';
 @injectable()
 export class JwtService implements ITokenService {
   generateAccessToken(userId: number, userRole: 'user' | 'admin'): string {
-    const secret: Secret = JWT_CONFIG.ACCESS_SECRET;
-    const duration: SignOptions["expiresIn"] = JWT_CONFIG.ACCESS_EXPIRY
+    const secret: Secret = JWT_CONFIG.ACCESS_SECRET!;
     return jwt.sign(
       { userId, userRole },
       secret,
-      { expiresIn: duration }
+      { expiresIn: JWT_CONFIG.ACCESS_EXPIRY }
     );
   }
 
