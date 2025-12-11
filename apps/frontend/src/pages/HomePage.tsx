@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom';
 import Button from '../components/Button';
 import EventCard from '../components/EventCard';
 import { AppRoutes } from '../routes';
-import { api } from '../api/axios'; // Import the API instance
-import { API_ROUTES } from '../constants/apiRoutes'; // Import API routes
-import type { Event } from '../types'; // Import Event type
+import { api } from '../api/axios'; 
+import { API_ROUTES } from '../constants/apiRoutes';
+import type { Event } from '../types';
 import LoadingSpinner from '../components/LoadingSpinner';
 import toast from 'react-hot-toast';
 

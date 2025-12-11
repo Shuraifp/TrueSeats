@@ -42,20 +42,26 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [setAccessToken]);
 
   const checkAuthStatus = useCallback(async () => {
-    console.log('check')
+    const refreshToken = localStorage.getItem('trueSeatsToken');
+    if (!refreshToken) {
+      setAccessToken(null, null);
+      setIsLoading(false);
+      return;
+    }
     try {
-      const response = await api.post(API_ROUTES.AUTH.REFRESH_TOKEN);
+      const response = await api.post(API_ROUTES.AUTH.REFRESH_TOKEN, {}, {
+        headers: { Authorization: `Bearer ${refreshToken}` },
+      });
       const { accessToken: newAccessToken, userRole: newUserRole } = response.data;
       setAccessToken(newAccessToken, newUserRole);
-    } catch (error) {
-      console.log('No active session or refresh token expired.', error);
+    } catch {
       setAccessToken(null, null);
-      localStorage.removeItem('trueSeatsToken')
+      localStorage.removeItem('trueSeatsToken');
     } finally {
       setIsLoading(false);
     }
   }, [setAccessToken]);
-
+  
   useEffect(() => {
     setUnauthorizedInterceptor(logout);
     checkAuthStatus();

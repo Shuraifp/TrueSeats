@@ -46,10 +46,16 @@ export class AuthController {
 
   async refresh(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-      const refreshToken = req.headers.authorization?.split(' ')[1]
+      const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        throw new UnauthorizedError("No token provided");
+    }
+
+    const refreshToken = authHeader.split(" ")[1];
       if (!refreshToken) {
         throw new UnauthorizedError('Refresh token not found');
       }
+      console.log(refreshToken)
       const authResponse = await this.refreshTokenUseCase.execute(refreshToken);
       res.status(StatusCodes.OK).json({ accessToken: authResponse.accessToken, userRole: authResponse.user.role });
     } catch (error: any) {
