@@ -68,7 +68,7 @@ const EditEventPage: React.FC = () => {
           initialValues={{
             title: event.title,
             description: event.description,
-            date: event.date,
+            date: event.date.split('T')[0],
             availableSeats: event.availableSeats,
           }}
           validationSchema={EditEventSchema}

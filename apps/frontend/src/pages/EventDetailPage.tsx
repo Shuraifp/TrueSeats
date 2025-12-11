@@ -71,7 +71,7 @@ const EventDetailPage: React.FC = () => {
         <div className="p-8 max-w-2xl w-full mx-auto md:mx-0">
           <h1 className="text-4xl font-extrabold text-white mb-4 tracking-tight leading-tight">{event.title}</h1>
           <p className="text-lg text-gray-300 mb-6">{event.description}</p>
-          <p className="text-md text-gray-400 mb-2">Date: <span className="font-semibold text-cyan-300">{event.date}</span></p>
+          <p className="text-md text-gray-400 mb-2">Date: <span className="font-semibold text-cyan-300">{event.date.split('T')[0]}</span></p>
           <p className="text-md text-gray-400 mb-6">Available Seats: <span className="font-semibold text-yellow-400">{event.availableSeats}</span></p>
           
           {event.availableSeats > 0 && (
