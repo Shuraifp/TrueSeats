@@ -44,3 +44,6 @@ export class EventRepository implements IEventRepository {
     await EventModel.destroy({ where: { id } });
   }
 }
+
+
+
